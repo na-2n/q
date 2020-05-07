@@ -11,9 +11,7 @@ namespace gl {
             const int size;
             const GLenum gl_type;
 
-            constexpr pointer_base(const int& count_, const int& size_, const GLenum& gl_type_)
-                : count{count_}, size{size_}, gl_type{gl_type_}
-            {}
+            constexpr pointer_base(const int& count_, const int& size_, const GLenum& gl_type_);
         };
 
         template<typename T, int Count, int Size = sizeof(T)>
