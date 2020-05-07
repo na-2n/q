@@ -1,0 +1,4 @@
+-I./src/
+-I./third_party/glfw/include
+-I./third_party/glm
+-I./build/third_party/glad/include

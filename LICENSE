@@ -1,0 +1,4 @@
+The "game", everything in the "client" and "server" namespaces, is licensed under the GNU General Public License version 3.0, it can be found in "LICENSE_game".
+
+The "engine", everything but the "client" and "server" namespaces, is licensed under the GNU Lesser General Public License version 3.0, it can be found in "LICENSE_engine"
+
