@@ -15,6 +15,15 @@ namespace gl {
 
         ~buffer_object();
 
+        template<GLenum Usage = GL_STATIC_DRAW>
+        void set_data(const void* data, const unsigned int& size);
+
+        template<GLenum Usage = GL_STATIC_DRAW>
+        inline void set_data(const void* data)
+        {
+            set_data(data, sizeof(data));
+        }
+
         template<typename T, GLenum Usage = GL_STATIC_DRAW>
         void set_data(const std::vector<T>& vec, const unsigned int& size);
 

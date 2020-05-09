@@ -13,6 +13,13 @@ namespace gl {
     }
 
     template<GLenum Target>
+    template<GLenum Usage>
+    void buffer_object<Target>::set_data(const void* data, const unsigned int& size)
+    {
+        glBufferData(Target, size, data, Usage);
+    }
+
+    template<GLenum Target>
     template<typename T, GLenum Usage>
     void buffer_object<Target>::set_data(const std::vector<T>& vec, const unsigned int& size)
     {

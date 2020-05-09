@@ -20,21 +20,29 @@ namespace client {
 
         ~game_window();
 
-        void make_current() const;
+        inline void make_current() const
+        {
+            glfwMakeContextCurrent(_win);
+        }
 
         void run_loop();
 
     private:
-        std::shared_ptr<camera> _cam;
         game_renderer _renderer;
         input_manager _input;
+        camera _cam;
 
         GLFWwindow* _win;
         double _last_frame;
-        int _win_width;
-        int _win_height;
 
-        void _check_win_size();
+        void _on_resize(int width, int height);
+
+        static inline void _glfw_resize_cb(GLFWwindow* win, int width, int height)
+        {
+            auto self = static_cast<game_window*>(glfwGetWindowUserPointer(win));
+
+            self->_on_resize(width, height);
+        }
     };
 }
 }

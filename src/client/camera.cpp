@@ -16,10 +16,6 @@ namespace client {
         _update_vectors();
     }
 
-    camera::~camera()
-    {
-    }
-
     void camera::move(const glm::vec3& offset)
     {
         if (offset.x) {
@@ -50,26 +46,6 @@ namespace client {
         }
 
         _update_vectors();
-    }
-
-    glm::mat4 camera::view_matrix() const
-    {
-        return glm::lookAt(_position, _position + _forward, _up);
-    }
-
-    glm::mat4 camera::projection_matrix() const
-    {
-        return glm::perspective(glm::radians(_fov), _aspect_ratio, 0.01f, 1000.0f);
-    }
-
-    void camera::set_fov(const float& fov)
-    {
-        _fov = fov;
-    }
-
-    void camera::set_aspect_ratio(const float& aspect_ratio)
-    {
-        _aspect_ratio = aspect_ratio;
     }
 
     void camera::_update_vectors()

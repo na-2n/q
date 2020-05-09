@@ -4,6 +4,10 @@
 
 #include "gl/shader.hpp"
 
+#include "models.hpp"
+#include "mesh_builder.hpp"
+
+
 namespace {
     const std::vector<float> triangle{
         -0.5f, -0.5f, 0.5f,
@@ -42,10 +46,10 @@ namespace {
 namespace q {
 namespace client {
     game_renderer::game_renderer()
-        : _shader{}, _vbo{}, _vao{}, _ebo{}
+        : _shader{}, _mesh{}
     {
-        gl::vertex_shader vert{vert_str};
-        gl::fragment_shader frag{frag_str};
+        gl::vertex_shader vert{::vert_str};
+        gl::fragment_shader frag{::frag_str};
 
         vert.build();
         frag.build();
@@ -54,33 +58,25 @@ namespace client {
         _shader.attach(frag);
         _shader.build();
 
-        _vbo.bind();
-        _vbo.set_data(::triangle);
+        mesh_builder builder{};
 
-        _vao.bind();
-        _vao.set_attributes(
-            std::vector<gl::vertex_attribute::pointer_base>{
-                gl::vertex_attribute::pointer<float, 3>{}
-            }
-        );
+        builder.add_face(models::block_front);
+        builder.add_face(models::block_top);
+        builder.add_face(models::half_block_left, glm::vec3{0, 0.5f, 0});
+
+        _mesh.load_data(builder);
     }
 
-    void game_renderer::draw(const double& delta_time)
+    void game_renderer::draw(const double& delta_time, camera& cam)
     {
-        _shader.set_uniform("view_mat", _cam->view_matrix());
-        _shader.set_uniform("proj_mat", _cam->projection_matrix());
+        _shader.set_uniform("view_mat", cam.view_matrix());
+        _shader.set_uniform("proj_mat", cam.projection_matrix());
 
         _shader.bind();
-        _vao.bind();
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        _vao.unbind();
-    }
-
-    void game_renderer::set_camera(const std::shared_ptr<camera>& cam)
-    {
-        _cam = cam;
+        if (_mesh.has_data()) {
+            _mesh.draw();
+        }
     }
 }
 }

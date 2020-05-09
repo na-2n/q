@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace q {
 namespace client {
@@ -8,19 +9,29 @@ namespace client {
     public:
         camera(const glm::vec3& position, const float& aspect_ratio, const float& fov = 45);
 
-        ~camera();
-
         void move(const glm::vec3& offset);
 
         void rotate(const glm::vec2& offset);
 
-        glm::mat4 view_matrix() const;
+        inline glm::mat4 view_matrix() const
+        {
+            return glm::lookAt(_position, _position + _forward, _up);
+        }
 
-        glm::mat4 projection_matrix() const;
+        inline glm::mat4 projection_matrix() const
+        {
+            return glm::perspective(glm::radians(_fov), _aspect_ratio, 0.01f, 100.0f);
+        }
 
-        void set_fov(const float& fov);
+        inline void set_fov(const float& fov)
+        {
+            _fov = fov;
+        }
 
-        void set_aspect_ratio(const float& aspect_ratio);
+        inline void set_aspect_ratio(const float& aspect_ratio)
+        {
+            _aspect_ratio = aspect_ratio;
+        }
 
     private:
         glm::vec3 _position;

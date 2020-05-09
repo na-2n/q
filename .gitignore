@@ -626,3 +626,6 @@ MigrationBackup/
 # End of https://www.gitignore.io/api/c,vim,c++,cmake,clion,emacs,kdevelop4,codeblocks,visualstudio,visualstudiocode
 
 build/
+.clangd/
+compile_commands.json
+

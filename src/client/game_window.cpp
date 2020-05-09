@@ -38,16 +38,17 @@ namespace client {
     }
 
     game_window::game_window(GLFWwindow*& win)
-        : _win{win}, _input{_win}, _renderer{},
-          _cam{
-              new camera{glm::vec3{0}, static_cast<float>(::win_width) / static_cast<float>(::win_height)}
-          }
+        : _win{win}, _input{win}, _renderer{},
+          _cam{glm::vec3{0}, static_cast<float>(::win_width) / static_cast<float>(::win_height)}
     {
         make_current();
 
+        glfwSetWindowUserPointer(_win, this);
+        glfwSetFramebufferSizeCallback(_win, _glfw_resize_cb);
+
+        glEnable(GL_DEPTH_TEST);
+
         _input.set_cursor_visible(false);
-        _input.set_camera(_cam);
-        _renderer.set_camera(_cam);
     }
 
     game_window::~game_window()
@@ -59,11 +60,6 @@ namespace client {
         glfwTerminate();
     }
 
-    void game_window::make_current() const
-    {
-        glfwMakeContextCurrent(_win);
-    }
-
     void game_window::run_loop()
     {
         while (!glfwWindowShouldClose(_win)) {
@@ -71,13 +67,12 @@ namespace client {
             const auto delta_time = frame - _last_frame;
             _last_frame = frame;
 
-            _check_win_size();
-            _input.process(delta_time);
+            _input.process(delta_time, _cam);
 
             glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            _renderer.draw(delta_time);
+            _renderer.draw(delta_time, _cam);
 
             glfwSwapBuffers(_win);
             glfwPollEvents();
@@ -86,22 +81,11 @@ namespace client {
         glfwTerminate();
     }
 
-    void game_window::_check_win_size()
+    void game_window::_on_resize(int width, int height)
     {
-        int width = 0;
-        int height = 0;
+        glViewport(0, 0, width, height);
 
-        glfwGetFramebufferSize(_win, &width, &height);
-
-
-        if (width != _win_width || height != _win_height) {
-            _win_width = width;
-            _win_height = height;
-
-            glViewport(0, 0, width, height);
-
-            _cam->set_aspect_ratio(static_cast<float>(width) / static_cast<float>(height));
-        }
+        _cam.set_aspect_ratio(static_cast<float>(width) / static_cast<float>(height));
     }
 }
 }

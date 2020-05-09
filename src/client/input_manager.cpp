@@ -6,28 +6,31 @@
 
 namespace q {
 namespace client {
-    input_manager::input_manager(GLFWwindow*& win) : _win{win}
+    input_manager::input_manager(GLFWwindow*& win)
+        : _win{win}
     {
-        _cam = nullptr;
+        _wireframe = false;
         _sensitivity = 0.05f;
     }
 
-    input_manager::~input_manager()
-    {
-    }
-
-    void input_manager::process(const double& delta_time)
+    void input_manager::process(const double& delta_time, camera& cam)
     {
         if (_is_focused()) {
-            process_cursor(delta_time);
-            process_keyboard(delta_time);
+            process_cursor(delta_time, cam);
+            process_keyboard(delta_time, cam);
         }
     }
 
-    void input_manager::process_keyboard(const double& delta_time)
+    void input_manager::process_keyboard(const double& delta_time, camera& cam)
     {
         float velocity = 1 * delta_time;
         glm::vec3 offset{0};
+
+        if (_is_pressed(GLFW_KEY_F)) {
+            _wireframe = !_wireframe;
+
+            glPolygonMode(GL_FRONT_AND_BACK, _wireframe ? GL_LINE : GL_FILL);
+        }
 
         if (_is_pressed(GLFW_KEY_LEFT_SHIFT)) {
             velocity *= 2;
@@ -57,10 +60,10 @@ namespace client {
             offset.y -= velocity;
         }
 
-        _cam->move(offset);
+        cam.move(offset);
     }
 
-    void input_manager::process_cursor(const double& delta_time)
+    void input_manager::process_cursor(const double& delta_time, camera& cam)
     {
         int win_width;
         int win_height;
@@ -81,20 +84,8 @@ namespace client {
             const auto offset_x = cursor_x - center_x;
             const auto offset_y = center_y - cursor_y;
 
-            if (_cam) {
-                _cam->rotate(glm::vec2{offset_x, offset_y} * _sensitivity);
-            }
+            cam.rotate(glm::vec2{offset_x, offset_y} * _sensitivity);
         }
-    }
-
-    void input_manager::set_cursor_visible(const bool& state)
-    {
-        glfwSetInputMode(_win, GLFW_CURSOR, state ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
-    }
-
-    void input_manager::set_camera(const std::shared_ptr<camera>& cam)
-    {
-        _cam = cam;
     }
 }
 }
