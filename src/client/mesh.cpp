@@ -15,6 +15,12 @@ namespace client {
         );
     }
 
+    mesh::mesh(mesh_builder& builder)
+        : mesh::mesh{}
+    {
+        load_data(builder);
+    }
+
     void mesh::load_data(mesh_builder& builder)
     {
         _vbo.bind();
@@ -40,7 +46,7 @@ namespace client {
         _indices = indices.size();
     }
 
-    void mesh::draw()
+    void mesh::draw() const
     {
         _vbo.bind();
         _vao.bind();

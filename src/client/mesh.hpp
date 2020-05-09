@@ -16,12 +16,14 @@ namespace client {
     public:
         mesh();
 
+        mesh(mesh_builder& builder);
+
         void load_data(mesh_builder& builder);
 
         void load_data(const std::vector<glm::vec3>& vertices,
                        const std::vector<unsigned int>& indices);
 
-        void draw();
+        void draw() const;
 
         inline bool has_data() const
         {

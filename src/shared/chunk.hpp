@@ -9,9 +9,13 @@ namespace shared {
     public:
         using block_type = unsigned short;
 
-        static const int size = 255;
+        static const int size = 16;
+        static constexpr int size_squared = size * size;
+        static constexpr int size_cubic = size * size * size;
 
-        const block_type& block_at(const glm::ivec3& pos) const;
+        chunk(const block_type& initial = 0);
+
+        block_type& block_at(const glm::ivec3& pos);
 
     private:
         std::array<block_type, size * size * size> _blocks;

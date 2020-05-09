@@ -1,12 +1,14 @@
 #pragma once
 
 #include <unordered_map>
+#include <map>
 #include <functional>
 #include <optional>
 #include <memory>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
+#include <glm/gtx/type_trait.hpp>
 
 #include "chunk.hpp"
 
@@ -14,12 +16,19 @@ namespace q {
 namespace shared {
     class chunk_manager {
     public:
-        std::optional<std::reference_wrapper<chunk>> chunk_at(const glm::ivec3& pos) const;
+        chunk_manager();
 
-        chunk::block_type block_at(const glm::ivec3& world_pos) const;
+        inline void add_chunk(const glm::ivec3& pos)
+        {
+            _chunks.emplace(pos, 1);
+        }
+
+        std::optional<std::reference_wrapper<chunk>> chunk_at(const glm::ivec3& pos);
+
+        chunk::block_type block_at(const glm::ivec3& world_pos);
 
     private:
-        using chunk_map = std::unordered_map<glm::ivec3, std::reference_wrapper<chunk>>;
+        using chunk_map = std::unordered_map<glm::ivec3, chunk>;
 
         chunk_map _chunks;
     };

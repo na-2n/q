@@ -3,18 +3,13 @@
 #include <vector>
 
 #include "gl/shader.hpp"
+#include "shared/chunk_manager.hpp"
 
 #include "models.hpp"
 #include "mesh_builder.hpp"
-
+#include "chunk_mesher.hpp"
 
 namespace {
-    const std::vector<float> triangle{
-        -0.5f, -0.5f, 0.5f,
-         0.5f, -0.5f, 0.5f,
-         0.0f,  0.5f, 0.5f
-    };
-
     const std::string vert_str{
         R"GLSL(
         #version 430
@@ -46,7 +41,7 @@ namespace {
 namespace q {
 namespace client {
     game_renderer::game_renderer()
-        : _shader{}, _mesh{}
+        : _shader{}, _mesh{}, _chunk_mgr{}, _mesher{_chunk_mgr}
     {
         gl::vertex_shader vert{::vert_str};
         gl::fragment_shader frag{::frag_str};
@@ -58,13 +53,14 @@ namespace client {
         _shader.attach(frag);
         _shader.build();
 
-        mesh_builder builder{};
+        _chunk_mgr.add_chunk(glm::ivec3{0});
+        _chunk_mgr.add_chunk(glm::ivec3{1, 0, 0});
+        _chunk_mgr.add_chunk(glm::ivec3{0, -1, 0});
+        _chunk_mgr.add_chunk(glm::ivec3{0, 0, 1});
 
-        builder.add_face(models::block_front);
-        builder.add_face(models::block_top);
-        builder.add_face(models::half_block_left, glm::vec3{0, 0.5f, 0});
+        _mesher.gen_mesh(glm::ivec3{0});
 
-        _mesh.load_data(builder);
+        _mesh = _mesher.mesh_at(glm::ivec3{0});
     }
 
     void game_renderer::draw(const double& delta_time, camera& cam)

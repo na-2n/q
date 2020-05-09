@@ -33,7 +33,7 @@ namespace client {
         }
 
         if (_is_pressed(GLFW_KEY_LEFT_SHIFT)) {
-            velocity *= 2;
+            velocity *= 4;
         }
 
         if (_is_pressed(GLFW_KEY_W)) {

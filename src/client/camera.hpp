@@ -20,7 +20,7 @@ namespace client {
 
         inline glm::mat4 projection_matrix() const
         {
-            return glm::perspective(glm::radians(_fov), _aspect_ratio, 0.01f, 100.0f);
+            return glm::perspective(glm::radians(_fov), _aspect_ratio, 0.01f, 1000.0f);
         }
 
         inline void set_fov(const float& fov)
