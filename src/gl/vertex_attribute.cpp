@@ -9,15 +9,5 @@ namespace gl {
     {
         glVertexAttribPointer(index, size, type, normalized, stride, ptr);
     }
-
-    void vertex_attribute::enable() const
-    {
-        glEnableVertexAttribArray(_index);
-    }
-
-    void vertex_attribute::disable() const
-    {
-        glDisableVertexAttribArray(_index);
-    }
 }
 }

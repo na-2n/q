@@ -24,9 +24,15 @@ namespace gl {
         vertex_attribute(const unsigned int& index, const int& size, const GLenum& type,
                          const int& stride, const void*& ptr, const bool& normalized = false);
 
-        void enable() const;
+        inline void enable() const
+        {
+            glEnableVertexAttribArray(_index);
+        }
 
-        void disable() const;
+        inline void disable() const
+        {
+            glDisableVertexAttribArray(_index);
+        }
 
     private:
         unsigned int _index;

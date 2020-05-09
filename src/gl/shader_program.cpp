@@ -28,11 +28,6 @@ namespace gl {
         glUniform3fv(_get_uniform_location(name), 1, glm::value_ptr(value));
     }
 
-    const bool& shader_program::is_built() const
-    {
-        return _built;
-    }
-
     void shader_program::build()
     {
         glLinkProgram(_handle);
@@ -57,18 +52,6 @@ namespace gl {
         }
 
         _built = true;
-    }
-
-
-
-    void shader_program::bind() const
-    {
-        glUseProgram(_handle);
-    }
-
-    void shader_program::unbind()
-    {
-        glUseProgram(0);
     }
 }
 }

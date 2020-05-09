@@ -16,11 +16,20 @@ namespace gl {
 
         void set_attributes(const std::vector<vertex_attribute::pointer_base>& attrPtrs);
 
-        const vertex_attribute& attribute_at(const int& index) const;
+        inline const vertex_attribute& attribute_at(const int& index) const
+        {
+            return _attrs[index];
+        }
 
-        void bind() const;
+        inline void bind() const
+        {
+            glBindVertexArray(_handle);
+        }
 
-        static void unbind();
+        inline static void unbind()
+        {
+            glBindVertexArray(0);
+        }
 
     private:
         unsigned int _handle;

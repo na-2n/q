@@ -15,13 +15,22 @@ namespace gl {
 
         ~shader();
 
-        void attach_to(const unsigned int& program) const;
+        inline void attach_to(const unsigned int& program) const
+        {
+            glAttachShader(program, _handle);
+        }
 
-        void detach_from(const unsigned int& program) const;
+        inline void detach_from(const unsigned int& program) const
+        {
+            glDetachShader(program, _handle);
+        }
 
         void build();
 
-        const bool& is_built() const;
+        inline const bool& is_built() const
+        {
+            return _built;
+        }
 
     private:
         unsigned int _handle;

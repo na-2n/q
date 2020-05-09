@@ -17,13 +17,17 @@ namespace gl {
 
         ~shader_program();
 
-        const bool& is_built() const;
+        template<GLenum Type>
+        inline void attach(const shader<Type>& obj) const
+        {
+            obj.attach_to(_handle);
+        }
 
         template<GLenum Type>
-        void attach(const shader<Type>& obj);
-
-        template<GLenum Type>
-        void detach(const shader<Type>& obj);
+        inline void detach(const shader<Type>& obj) const
+        {
+            obj.detach_from(_handle);
+        }
 
 // metaprogramming bad sorry
 #define SET_UNIFORM(T) \
@@ -36,16 +40,27 @@ namespace gl {
 
         void build();
 
-        void bind() const;
+        inline void bind() const
+        {
+            glUseProgram(_handle);
+        }
 
-        static void unbind();
+        inline static void unbind()
+        {
+            glUseProgram(0);
+        }
+
+        inline const bool& is_built() const
+        {
+            return _built;
+        }
 
     private:
         std::map<std::string, int> _uniform_locations;
         unsigned int _handle;
         bool _built;
 
-        const int& _get_uniform_location(const std::string& name)
+        int _get_uniform_location(const std::string& name)
         {
             const auto& search = _uniform_locations.find(name);
 
@@ -53,7 +68,7 @@ namespace gl {
                 return search->second;
             }
 
-            const auto& location = glGetUniformLocation(_handle, name.c_str());
+            const auto location = glGetUniformLocation(_handle, name.c_str());
 
             _uniform_locations[name] = location;
 
@@ -62,5 +77,3 @@ namespace gl {
     };
 }
 }
-
-#include "shader_program.inl"

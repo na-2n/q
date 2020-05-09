@@ -38,20 +38,5 @@ namespace gl {
             attr.enable();
         }
     }
-
-    const vertex_attribute& vertex_array_object::attribute_at(const int& index) const
-    {
-        return _attrs[index];
-    }
-
-    void vertex_array_object::bind() const
-    {
-        glBindVertexArray(_handle);
-    }
-
-    void vertex_array_object::unbind()
-    {
-        glBindVertexArray(0);
-    }
 }
 }

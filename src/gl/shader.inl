@@ -21,18 +21,6 @@ namespace gl {
     }
 
     template<GLenum Type>
-    void shader<Type>::attach_to(const unsigned int& program) const
-    {
-        glAttachShader(program, _handle);
-    }
-
-    template<GLenum Type>
-    void shader<Type>::detach_from(const unsigned int& program) const
-    {
-        glDetachShader(program, _handle);
-    }
-
-    template<GLenum Type>
     void shader<Type>::build()
     {
         glCompileShader(_handle);
@@ -58,12 +46,6 @@ namespace gl {
         }
 
         _built = true;
-    }
-
-    template<GLenum Type>
-    const bool& shader<Type>::is_built() const
-    {
-        return _built;
     }
 }
 }

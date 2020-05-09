@@ -16,26 +16,38 @@ namespace gl {
         ~buffer_object();
 
         template<GLenum Usage = GL_STATIC_DRAW>
-        void set_data(const void* data, const unsigned int& size);
+        inline void set_data(const void* data, const unsigned int& size) const
+        {
+            glBufferData(Target, size, data, Usage);
+        }
 
         template<GLenum Usage = GL_STATIC_DRAW>
-        inline void set_data(const void* data)
+        inline void set_data(const void* data) const
         {
             set_data(data, sizeof(data));
         }
 
         template<typename T, GLenum Usage = GL_STATIC_DRAW>
-        void set_data(const std::vector<T>& vec, const unsigned int& size);
+        inline void set_data(const std::vector<T>& vec, const unsigned int& size) const
+        {
+            glBufferData(Target, size, vec.data(), Usage);
+        }
 
         template<typename T, GLenum Usage = GL_STATIC_DRAW>
-        inline void set_data(const std::vector<T>& vec)
+        inline void set_data(const std::vector<T>& vec) const
         {
             set_data(vec, vec.size() * sizeof(T));
         }
 
-        void bind() const;
+        inline void bind() const
+        {
+            glBindBuffer(Target, _handle);
+        }
 
-        static void unbind();
+        inline static void unbind()
+        {
+            glBindBuffer(Target, 0);
+        }
 
     private:
         unsigned int _handle;
