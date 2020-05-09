@@ -1,14 +1,12 @@
 #pragma once
 
 #include <unordered_map>
-#include <map>
 #include <functional>
 #include <optional>
 #include <memory>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
-#include <glm/gtx/type_trait.hpp>
 
 #include "chunk.hpp"
 
