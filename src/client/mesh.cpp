@@ -10,7 +10,8 @@ namespace client {
 
         _vao.set_attributes(
             std::vector<gl::vertex_attribute::pointer_base>{
-                gl::vertex_attribute::pointer<float, 3>{}
+                gl::vertex_attribute::pointer<float, 3>{}, // position
+                gl::vertex_attribute::pointer<float, 3>{}, // normal
             }
         );
     }

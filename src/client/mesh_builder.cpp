@@ -9,7 +9,7 @@ namespace client {
 
     void mesh_builder::add_face(const std::vector<glm::vec3>& face_verts, const glm::vec3& face_pos)
     {
-        const int cube_face_verts = 4;
+        const int cube_face_verts = 4 * 2;
 
         for (auto i = 0; i < cube_face_verts; i++) {
             const auto& vert = face_verts[i];

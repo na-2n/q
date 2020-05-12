@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "game_renderer.hpp"
+#include "game_world.hpp"
 #include "input_manager.hpp"
 #include "camera.hpp"
 
@@ -29,6 +30,7 @@ namespace client {
 
     private:
         game_renderer _renderer;
+        game_world _world;
         input_manager _input;
         camera _cam;
 

@@ -3,16 +3,19 @@
 #include <memory>
 #include <map>
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#undef  GLFW_INCLUDE_NONE
 #include <glm/glm.hpp>
 
+#include "game_world.hpp"
 #include "camera.hpp"
 
 namespace q {
 namespace client {
     class input_manager {
     public:
-        input_manager(GLFWwindow*& win);
+        input_manager(GLFWwindow*& win, game_world& world);
 
         void process(const double& delta_time, camera& cam);
 
@@ -28,6 +31,7 @@ namespace client {
     private:
         std::map<unsigned int, bool> _key_states;
         GLFWwindow*& _win;
+        game_world& _world;
         float _sensitivity;
         bool _wireframe;
 

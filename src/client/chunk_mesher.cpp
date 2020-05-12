@@ -1,5 +1,7 @@
 #include "chunk_mesher.hpp"
 
+#include "shared/math.hpp"
+
 #include "mesh_builder.hpp"
 #include "models.hpp"
 
@@ -35,37 +37,33 @@ namespace client {
                     const auto world_pos = block_pos + pos * shared::chunk::size;
 
                     if (block) {
-                        const glm::ivec3 unit_x{1, 0, 0};
-                        const glm::ivec3 unit_y{0, 1, 0};
-                        const glm::ivec3 unit_z{0, 0, 1};
-
                         // left
-                        if (_should_render_face(world_pos - unit_x)) {
+                        if (_should_render_face(world_pos - shared::math::vec3::unit_x)) {
                             mb.add_face(models::block_left, block_pos);
                         }
 
                         // right
-                        if (_should_render_face(world_pos + unit_x)) {
+                        if (_should_render_face(world_pos + shared::math::vec3::unit_x)) {
                             mb.add_face(models::block_right, block_pos);
                         }
 
                         // bottom
-                        if (_should_render_face(world_pos - unit_y)) {
+                        if (_should_render_face(world_pos - shared::math::vec3::unit_y)) {
                             mb.add_face(models::block_bottom, block_pos);
                         }
 
                         // top
-                        if (_should_render_face(world_pos + unit_y)) {
+                        if (_should_render_face(world_pos + shared::math::vec3::unit_y)) {
                             mb.add_face(models::block_top, block_pos);
                         }
 
                         // back
-                        if (_should_render_face(world_pos - unit_z)) {
+                        if (_should_render_face(world_pos - shared::math::vec3::unit_z)) {
                             mb.add_face(models::block_back, block_pos);
                         }
 
                         // front
-                        if (_should_render_face(world_pos + unit_z)) {
+                        if (_should_render_face(world_pos + shared::math::vec3::unit_z)) {
                             mb.add_face(models::block_front, block_pos);
                         }
                     }
@@ -81,6 +79,30 @@ namespace client {
             m.load_data(mb);
         } else {
             _meshes.emplace(pos, mb);
+        }
+    }
+
+    void chunk_mesher::gen_with_neighbors(const glm::ivec3& pos)
+    {
+        gen_mesh(pos + shared::math::vec3::unit_x);
+        gen_mesh(pos - shared::math::vec3::unit_x);
+        gen_mesh(pos + shared::math::vec3::unit_y);
+        gen_mesh(pos - shared::math::vec3::unit_y);
+        gen_mesh(pos + shared::math::vec3::unit_z);
+        gen_mesh(pos - shared::math::vec3::unit_z);
+        gen_mesh(pos);
+    }
+
+    void chunk_mesher::draw_chunks(gl::shader_program& shader)
+    {
+        for (const auto& entry : _meshes) {
+            const auto& mesh = entry.second;
+
+            if (mesh.has_data()) {
+                shader.set_uniform("chunk_pos", entry.first * shared::chunk::size);
+
+                mesh.draw();
+            }
         }
     }
 }

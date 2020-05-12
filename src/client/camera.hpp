@@ -23,6 +23,16 @@ namespace client {
             return glm::perspective(glm::radians(_fov), _aspect_ratio, 0.01f, 1000.0f);
         }
 
+        inline const glm::vec3& position() const
+        {
+            return _position;
+        }
+
+        inline const glm::vec3& direction() const
+        {
+            return _forward;
+        }
+
         inline void set_fov(const float& fov)
         {
             _fov = fov;

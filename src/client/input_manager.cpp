@@ -4,10 +4,13 @@
 
 #include <glm/glm.hpp>
 
+#include "shared/math.hpp"
+#include "shared/chunk.hpp"
+
 namespace q {
 namespace client {
-    input_manager::input_manager(GLFWwindow*& win)
-        : _win{win}
+    input_manager::input_manager(GLFWwindow*& win, game_world& world)
+        : _win{win}, _world{world}
     {
         _wireframe = false;
         _sensitivity = 0.05f;
@@ -85,6 +88,48 @@ namespace client {
             const auto offset_y = center_y - cursor_y;
 
             cam.rotate(glm::vec2{offset_x, offset_y} * _sensitivity);
+        }
+
+        // mouse buttons
+
+        if (glfwGetMouseButton(_win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            auto maybe_hit = _world.chunk_mgr().cast_ray(cam.position(), cam.direction());
+
+            if (maybe_hit.has_value()) {
+                const auto& pos = maybe_hit->pos;
+                const glm::ivec3 local = glm::mod(glm::vec3{pos}, glm::vec3{shared::chunk::size});
+                const auto chunk_pos = (pos - local) / shared::chunk::size;
+
+                maybe_hit->block = 0;
+
+                _world.needs_update(chunk_pos);
+
+                const int bound = shared::chunk::size - 1;
+
+                if (local.x == 0) {
+                    _world.needs_update(chunk_pos - shared::math::vec3::unit_x);
+                }
+
+                if (local.x == bound) {
+                    _world.needs_update(chunk_pos + shared::math::vec3::unit_x);
+                }
+
+                if (local.y == 0) {
+                    _world.needs_update(chunk_pos - shared::math::vec3::unit_y);
+                }
+
+                if (local.y == bound) {
+                    _world.needs_update(chunk_pos + shared::math::vec3::unit_y);
+                }
+
+                if (local.z == 0) {
+                    _world.needs_update(chunk_pos - shared::math::vec3::unit_z);
+                }
+
+                if (local.z == bound) {
+                    _world.needs_update(chunk_pos + shared::math::vec3::unit_z);
+                }
+            }
         }
     }
 }

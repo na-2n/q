@@ -1,6 +1,6 @@
 #include "chunk_manager.hpp"
 
-#include <cmath>
+#include "ray.hpp"
 
 namespace q {
 namespace shared {
@@ -22,14 +22,9 @@ namespace shared {
         return {};
     }
 
-    chunk::block_type chunk_manager::block_at(const glm::ivec3& world_pos)
+    std::optional<std::reference_wrapper<chunk::block_type>> chunk_manager::block_at(const glm::ivec3& world_pos)
     {
-        const auto size_f = static_cast<float>(chunk::size);
-        const glm::ivec3 pos{
-            std::floor(world_pos.x / size_f),
-            std::floor(world_pos.y / size_f),
-            std::floor(world_pos.z / size_f)
-        };
+        const glm::ivec3 pos = glm::floor(glm::vec3{world_pos} / static_cast<float>(chunk::size));
 
         auto maybe_chunk = chunk_at(pos);
 
@@ -39,7 +34,27 @@ namespace shared {
             return chunk.block_at(world_pos - pos * chunk::size);
         }
 
-        return 0;
+        return {};
+    }
+
+    std::optional<chunk_manager::block_hit> chunk_manager::cast_ray(const glm::vec3& pos, const glm::vec3& dir, const float& max)
+    {
+        ray raycast{pos, dir, max};
+
+        while (!raycast.is_complete()) {
+            const auto& block_pos = glm::floor(raycast.step_cast());
+            auto maybe_block = block_at(block_pos);
+
+            if (maybe_block.has_value()) {
+                auto& block = maybe_block->get();
+
+                if (block) {
+                    return chunk_manager::block_hit{block, block_pos};
+                }
+            }
+        }
+
+        return {};
     }
 }
 }

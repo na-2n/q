@@ -38,8 +38,9 @@ namespace client {
     }
 
     game_window::game_window(GLFWwindow*& win)
-        : _win{win}, _input{win}, _renderer{},
-          _cam{glm::vec3{0}, static_cast<float>(::win_width) / static_cast<float>(::win_height)}
+        : _win{win},
+          _cam{glm::vec3{0}, static_cast<float>(::win_width) / static_cast<float>(::win_height)},
+          _world{}, _renderer{_world}, _input{_win, _world}
     {
         make_current();
 
@@ -47,6 +48,9 @@ namespace client {
         glfwSetFramebufferSizeCallback(_win, _glfw_resize_cb);
 
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CW);
 
         _input.set_cursor_visible(false);
     }

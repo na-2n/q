@@ -5,25 +5,21 @@
 #include "gl/buffer_object.hpp"
 #include "gl/vertex_array_object.hpp"
 #include "gl/shader_program.hpp"
-#include "shared/chunk_manager.hpp"
 
+#include "game_world.hpp"
 #include "camera.hpp"
-#include "mesh.hpp"
-#include "chunk_mesher.hpp"
 
 namespace q {
 namespace client {
     class game_renderer {
     public:
-        game_renderer();
+        game_renderer(game_world& world);
 
         void draw(const double& delta_time, camera& cam);
 
     private:
-        shared::chunk_manager _chunk_mgr;
+        game_world& _world;
         gl::shader_program _shader;
-        mesh _mesh;
-        chunk_mesher _mesher;
     };
 }
 }

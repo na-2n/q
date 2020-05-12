@@ -10,6 +10,7 @@
 
 #include "shared/chunk.hpp"
 #include "shared/chunk_manager.hpp"
+#include "gl/shader_program.hpp"
 
 namespace q {
 namespace client {
@@ -17,7 +18,11 @@ namespace client {
     public:
         chunk_mesher(shared::chunk_manager& chunk_mgr);
 
+        void gen_with_neighbors(const glm::ivec3& pos);
+
         void gen_mesh(const glm::ivec3& pos);
+
+        void draw_chunks(gl::shader_program& shader);
 
         inline const mesh& mesh_at(const glm::ivec3& pos) const
         {
@@ -34,7 +39,7 @@ namespace client {
         {
             const auto& block = _chunk_mgr.block_at(world_pos);
 
-            return block == 0;
+            return !block.has_value() || !*block;
         }
     };
 }

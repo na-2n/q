@@ -5,7 +5,7 @@ add_subdirectory("shared")
 add_subdirectory("client")
 add_subdirectory("server")
 
-set(q_LIBRARIES q-shared q-client)
+set(q_LIBRARIES q-client)
 set(q_SOURCES main.cpp)
 set(q_HEADERS)
 
