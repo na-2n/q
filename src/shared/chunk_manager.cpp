@@ -2,8 +2,6 @@
 
 #include "ray.hpp"
 
-#include <iostream>
-
 namespace q {
 namespace shared {
     chunk_manager::chunk_manager()
