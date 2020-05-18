@@ -92,15 +92,20 @@ namespace client {
 
         // mouse buttons
 
-        if (glfwGetMouseButton(_win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-            auto maybe_hit = _world.chunk_mgr().cast_ray(cam.position(), cam.direction());
+        const auto left_btn = glfwGetMouseButton(_win, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+        const auto right_btn = glfwGetMouseButton(_win, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+
+        if (left_btn || right_btn) {
+            auto maybe_hit = _world.chunk_mgr().cast_ray(cam.position(), cam.direction(), 5, right_btn);
 
             if (maybe_hit.has_value()) {
                 const auto& pos = maybe_hit->pos;
                 const glm::ivec3 local = glm::mod(glm::vec3{pos}, glm::vec3{shared::chunk::size});
                 const auto chunk_pos = (pos - local) / shared::chunk::size;
 
-                maybe_hit->block = 0;
+                const auto replace_with = right_btn ? 1 : 0;
+
+                maybe_hit->block = replace_with;
 
                 _world.needs_update(chunk_pos);
 

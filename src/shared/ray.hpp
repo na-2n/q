@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <stack>
 
 #include <glm/glm.hpp>
 
@@ -11,7 +12,22 @@ namespace shared {
         ray(const glm::vec3& pos, const glm::vec3& dir,
             const float& max_distance = INFINITY, const unsigned int& samples = 1);
 
-        glm::vec3 step_cast();
+        glm::vec3 step_forward();
+
+        inline glm::vec3 step_backward()
+        {
+            const float& offset = _steps.top();
+
+            if (_max_distance > 0) {
+                _ray_pos -= _ray_dir * offset;
+            }
+
+            _max_distance -= offset;
+
+            _steps.pop();
+
+            return position();
+        }
 
         inline const bool& is_complete() const
         {
@@ -24,6 +40,7 @@ namespace shared {
         }
 
     private:
+        std::stack<float> _steps;
         glm::vec3 _ray_dir;
         glm::vec3 _ray_pos;
         float _max_distance;

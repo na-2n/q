@@ -35,9 +35,12 @@ namespace shared {
 
         std::optional<std::reference_wrapper<chunk>> chunk_at(const glm::ivec3& pos);
 
-        std::optional<std::reference_wrapper<chunk::block_type>> block_at(const glm::ivec3& world_pos);
+        std::optional<std::reference_wrapper<chunk::block_type>> block_at(
+                const glm::ivec3& world_pos);
 
-        std::optional<block_hit> cast_ray(const glm::vec3& pos, const glm::vec3& dir, const float& max = 5);
+        std::optional<block_hit> cast_ray(const glm::vec3& pos, const glm::vec3& dir,
+                                          const float& max = 5,
+                                          const bool& step_back = false);
 
     private:
         using chunk_map = std::unordered_map<glm::ivec3, chunk>;

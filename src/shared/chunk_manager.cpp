@@ -2,6 +2,8 @@
 
 #include "ray.hpp"
 
+#include <iostream>
+
 namespace q {
 namespace shared {
     chunk_manager::chunk_manager()
@@ -9,7 +11,8 @@ namespace shared {
     {
     }
 
-    std::optional<std::reference_wrapper<chunk>> chunk_manager::chunk_at(const glm::ivec3& pos)
+    std::optional<std::reference_wrapper<chunk>> chunk_manager::chunk_at(
+            const glm::ivec3& pos)
     {
         const auto& search = _chunks.find(pos);
 
@@ -22,9 +25,11 @@ namespace shared {
         return {};
     }
 
-    std::optional<std::reference_wrapper<chunk::block_type>> chunk_manager::block_at(const glm::ivec3& world_pos)
+    std::optional<std::reference_wrapper<chunk::block_type>> chunk_manager::block_at(
+            const glm::ivec3& world_pos)
     {
-        const glm::ivec3 pos = glm::floor(glm::vec3{world_pos} / static_cast<float>(chunk::size));
+        const glm::ivec3 pos =
+            glm::floor(glm::vec3{world_pos} / static_cast<float>(chunk::size));
 
         auto maybe_chunk = chunk_at(pos);
 
@@ -37,19 +42,32 @@ namespace shared {
         return {};
     }
 
-    std::optional<chunk_manager::block_hit> chunk_manager::cast_ray(const glm::vec3& pos, const glm::vec3& dir, const float& max)
+    std::optional<chunk_manager::block_hit> chunk_manager::cast_ray(
+            const glm::vec3& pos, const glm::vec3& dir, const float& max,
+            const bool& step_back)
     {
         ray raycast{pos, dir, max};
 
         while (!raycast.is_complete()) {
-            const auto& block_pos = glm::floor(raycast.step_cast());
+            const auto& block_pos = glm::floor(raycast.step_forward());
             auto maybe_block = block_at(block_pos);
 
             if (maybe_block.has_value()) {
                 auto& block = maybe_block->get();
 
                 if (block) {
-                    return chunk_manager::block_hit{block, block_pos};
+                    if (step_back) {
+                        const auto& block_pos_back = glm::floor(raycast.step_backward());
+                        auto maybe_block_back = block_at(block_pos_back);
+
+                        if (maybe_block_back.has_value()) {
+                            return chunk_manager::block_hit{
+                                maybe_block_back->get(), block_pos
+                            };
+                        }
+                    } else {
+                        return chunk_manager::block_hit{block, block_pos};
+                    }
                 }
             }
         }

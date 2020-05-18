@@ -3,11 +3,16 @@
 namespace q {
 namespace shared {
     ray::ray(const glm::vec3& pos, const glm::vec3& dir, const float& max_distance, const unsigned int& samples)
-        : _ray_dir{glm::normalize(dir)}, _ray_pos{pos}, _max_distance{max_distance}, _samples{samples}, _is_complete{false}
+        : _ray_dir{glm::normalize(dir)},
+          _ray_pos{pos},
+          _max_distance{max_distance},
+          _samples{samples},
+          _is_complete{false},
+          _steps{}
     {
     }
 
-    glm::vec3 ray::step_cast()
+    glm::vec3 ray::step_forward()
     {
         if (_max_distance <= 0) {
             return _ray_pos;
@@ -37,8 +42,10 @@ namespace shared {
 
         _max_distance -= offset;
 
+        _steps.push(offset);
+
         if (_max_distance > 0) {
-            _ray_pos += _ray_dir * offset;
+            _ray_pos += _ray_dir * _steps.top();
         } else {
             _is_complete = true;
         }

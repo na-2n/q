@@ -24,7 +24,7 @@ namespace client {
         std::vector<unsigned int> indices;
         unsigned int indices_len = 0;
 
-        auto& chunk = maybe_chunk.value().get();
+        auto& chunk = maybe_chunk->get();
 
         mesh_builder mb;
 
