@@ -18,6 +18,10 @@ namespace client {
             throw std::runtime_error{"Failed to initialize GLFW"};
         }
 
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+
         auto win = glfwCreateWindow(::win_width, ::win_height, title.c_str(), nullptr, nullptr);
 
         if (!win) {

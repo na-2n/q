@@ -7,7 +7,7 @@
 namespace {
     const std::string vert_str{
         R"GLSL(
-        #version 430
+        #version 420
         in vec3 vert_pos;
         in vec3 vert_normal;
 
@@ -30,7 +30,7 @@ namespace {
 
     const std::string frag_str{
         R"GLSL(
-        #version 430
+        #version 420
         in vec3 frag_pos;
         in vec3 frag_normal;
 
