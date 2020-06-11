@@ -1,11 +1,6 @@
 #include "input_manager.hpp"
 
-#include <cmath>
-
 #include <glm/glm.hpp>
-
-#include "shared/math.hpp"
-#include "shared/chunk.hpp"
 
 namespace q {
 namespace client {
@@ -100,40 +95,11 @@ namespace client {
 
             if (maybe_hit.has_value()) {
                 const auto& pos = maybe_hit->pos;
-                const glm::ivec3 local = glm::mod(glm::vec3{pos}, glm::vec3{shared::chunk::size});
-                const auto chunk_pos = (pos - local) / shared::chunk::size;
-
                 const auto replace_with = right_btn ? 1 : 0;
 
                 maybe_hit->block = replace_with;
 
-                _world.needs_update(chunk_pos);
-
-                const int bound = shared::chunk::size - 1;
-
-                if (local.x == 0) {
-                    _world.needs_update(chunk_pos - shared::math::vec3::unit_x);
-                }
-
-                if (local.x == bound) {
-                    _world.needs_update(chunk_pos + shared::math::vec3::unit_x);
-                }
-
-                if (local.y == 0) {
-                    _world.needs_update(chunk_pos - shared::math::vec3::unit_y);
-                }
-
-                if (local.y == bound) {
-                    _world.needs_update(chunk_pos + shared::math::vec3::unit_y);
-                }
-
-                if (local.z == 0) {
-                    _world.needs_update(chunk_pos - shared::math::vec3::unit_z);
-                }
-
-                if (local.z == bound) {
-                    _world.needs_update(chunk_pos + shared::math::vec3::unit_z);
-                }
+                _world.update_block(pos);
             }
         }
     }

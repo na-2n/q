@@ -8,6 +8,7 @@
 #include "shared/chunk_manager.hpp"
 
 #include "chunk_mesher.hpp"
+#include "camera.hpp"
 
 namespace q {
 namespace client {
@@ -16,6 +17,8 @@ namespace client {
         game_world();
 
         void check_chunks();
+
+        void update_block(const glm::ivec3& pos);
 
         inline void draw(gl::shader_program& shader)
         {
