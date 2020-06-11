@@ -62,6 +62,8 @@ namespace shared {
                             return chunk_manager::block_hit{
                                 maybe_block_back->get(), block_pos
                             };
+                        } else {
+                            return {};
                         }
                     } else {
                         return chunk_manager::block_hit{block, block_pos};
