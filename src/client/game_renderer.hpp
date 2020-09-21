@@ -6,6 +6,7 @@
 #include "gl/vertex_array_object.hpp"
 #include "gl/shader_program.hpp"
 
+#include "asset_loader.hpp"
 #include "game_world.hpp"
 #include "camera.hpp"
 
@@ -19,6 +20,7 @@ namespace client {
 
     private:
         game_world& _world;
+        asset_loader _loader;
         gl::shader_program _shader;
     };
 }
